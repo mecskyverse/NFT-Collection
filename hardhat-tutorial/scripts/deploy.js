@@ -10,6 +10,11 @@ async function main() {
   /* A contract factory in ether.js is a abstraction used to deploy new smart contracts 
  so WhiteListContract here is a factory for instances of our Whitelist Contract*/
   const WhiteListContractFactory = await ethers.getContractFactory("Whitelist");
+  const deployedWhitelistContract = await WhiteListContractFactory.deploy(10);
+  await deployedWhitelistContract.deployed();
+  console.log(
+    `deployed whitelist Contract at: ${deployedWhitelistContract.address}`
+  );
 }
 
 // We recommend this pattern to be able to use async/await everywhere
