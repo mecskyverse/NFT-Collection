@@ -3,7 +3,7 @@ import styles from "../styles/Home.module.css";
 import Web3Modal from "web3modal";
 import { providers, Contract } from "ethers";
 import { useEffect, useRef, useState } from "react";
-import { WHITELIST_CONTRACT_ADDRESS, abi } from "../constants";
+import { CRYPTODEVS_CONTRACT_ADDRESS, abi } from "../constants";
 
 export default function Home() {
   // walletConnected keep track of whether the user's wallet is connected or not
@@ -50,12 +50,23 @@ export default function Home() {
     }
     return web3Provider;
   };
-
+  const startPresale = async() =>{
+    try {
+        const signer = await getProviderOrSigner(true);
+        const nftContract = new Contract(CRYPTODEVS_CONTRACT_ADDRESS, abi, signer);
+        const txn = await nftContract.startPresale();
+        await txn.wait();
+        
+    } catch (error) {
+      console.log(error)
+    }
+  }
   const checkIfPresaleStarted = async () =>{
     try {
       const provider = getProviderOrSigner();
-      const nftContract = new Contract(WHITELIST_CONTRACT_ADDRESS, abi, provider);
-      
+      const nftContract = new Contract(CRYPTODEVS_CONTRACT_ADDRESS, abi, provider);
+      const isPresaleStarted = nftContract.presaleStarted();
+      setPresaleStarted(isPresaleStarted);
     } catch (error) {
       console.log(error)
     }
