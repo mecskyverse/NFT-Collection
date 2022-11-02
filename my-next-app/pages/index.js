@@ -14,6 +14,8 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   // numberOfWhitelisted tracks the number of addresses's whitelisted
   const [numberOfWhitelisted, setNumberOfWhitelisted] = useState(0);
+  //To Check Presale is started or not
+  const [presaleStarted, setPresaleStarted] = useState(false);
   // Create a reference to the Web3 Modal (used for connecting to Metamask) which persists as long as the page is open
   const web3ModalRef = useRef();
 
@@ -49,6 +51,15 @@ export default function Home() {
     return web3Provider;
   };
 
+  const checkIfPresaleStarted = async () =>{
+    try {
+      const provider = getProviderOrSigner();
+      const nftContract = new Contract(WHITELIST_CONTRACT_ADDRESS, abi, provider);
+      
+    } catch (error) {
+      console.log(error)
+    }
+  }
   /**
    * addAddressToWhitelist: Adds the current connected address to the whitelist
    */
@@ -193,13 +204,18 @@ export default function Home() {
   return (
     <div>
       <Head>
-        <title>Whitelist Dapp</title>
+        <title>Crypto Devs NFT</title>
         <meta name="description" content="Whitelist-Dapp" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.main}>
         <div>
           <h1 className={styles.title}>Welcome to Crypto Devs!</h1>
+
+          <div className={styles.main}>
+            {walletConnected ? null:(<button onClick={connectWallet} className={styles.button}>Connect Wallet
+            </button>)}
+          </div> 
           <div className={styles.description}>
             Its an NFT collection for developers in Crypto.
           </div>
