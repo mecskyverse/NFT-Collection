@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import { CRYPTODEVS_CONTRACT_ADDRESS, abi } from "../constants";
 
 export default function Home() {
+  //This state will keep track of the owner status
+  const [isOwner, setIsOwner] = useState(false);
   // walletConnected keep track of whether the user's wallet is connected or not
   const [walletConnected, setWalletConnected] = useState(false);
   // joinedWhitelist keeps track of whether the current metamask address has joined the Whitelist or not
@@ -74,6 +76,20 @@ export default function Home() {
   /**
    * addAddressToWhitelist: Adds the current connected address to the whitelist
    */
+  const getOwner = async () => {
+    try {
+      const signer = await getProviderOrSigner(true);
+      const nftContract = new Contract(CRYPTODEVS_CONTRACT_ADDRESS, abi, signer);
+      const owner = nftContract.owner();
+      const userAddress = signer.getAddress(); 
+      if(owner.toLowerCase() === userAddress.toLowerCase()){
+
+      }
+
+    } catch (error) {
+      console.error(error)
+    }
+  }
   const addAddressToWhitelist = async () => {
     try {
       // We need a Signer here since this is a 'write' transaction.
