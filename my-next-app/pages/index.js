@@ -63,9 +63,9 @@ export default function Home() {
   }
   const checkIfPresaleStarted = async () =>{
     try {
-      const provider = getProviderOrSigner();
+      const provider = await getProviderOrSigner();
       const nftContract = new Contract(CRYPTODEVS_CONTRACT_ADDRESS, abi, provider);
-      const isPresaleStarted = nftContract.presaleStarted();
+      const isPresaleStarted = await nftContract.presaleStarted();
       setPresaleStarted(isPresaleStarted);
     } catch (error) {
       console.log(error)
