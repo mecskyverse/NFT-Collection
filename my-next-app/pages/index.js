@@ -83,6 +83,7 @@ export default function Home() {
       const owner = nftContract.owner();
       const userAddress = signer.getAddress(); 
       if(owner.toLowerCase() === userAddress.toLowerCase()){
+        setIsOwner(true);
 
       }
 
@@ -225,6 +226,7 @@ export default function Home() {
         disableInjectedProvider: false,
       });
       connectWallet();
+      checkIfPresaleStarted(); 
     }
   }, [walletConnected]);
 
