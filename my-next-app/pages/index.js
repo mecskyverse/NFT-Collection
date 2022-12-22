@@ -18,6 +18,8 @@ export default function Home() {
   const [numberOfWhitelisted, setNumberOfWhitelisted] = useState(0);
   //To Check Presale is started or not
   const [presaleStarted, setPresaleStarted] = useState(false);
+//To check if presale is ended or not
+  const [isPresaleEnded, setIsPresaleEnded] = useState(false);
   // Create a reference to the Web3 Modal (used for connecting to Metamask) which persists as long as the page is open
   const web3ModalRef = useRef();
 
@@ -71,6 +73,20 @@ export default function Home() {
       setPresaleStarted(isPresaleStarted);
     } catch (error) {
       console.log(error)
+    }
+  }
+  const checkIfPresaleEnded =async() => {
+    try {
+      const provider = await getProviderOrSigner();
+      const nftContract = new Contract(CRYPTODEVS_CONTRACT_ADDRESS, abi, provider);
+      const presaleEndTime = nftContract.presaleEnded; //time in seconds
+      const currentTime = Date.now() / 1000; //time in seconds after dividing it by 1000
+
+      const hasPresaleEnded = presaleEndTime.lt(Math.floor(currentTime));
+      setIsPresaleEnded(hasPresaleEnded);
+
+    } catch (error) {
+      console.error(error);
     }
   }
   /**
