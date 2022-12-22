@@ -228,6 +228,14 @@ export default function Home() {
     }
   };
 
+  const onPageLoad = async () => {
+      await connectWallet();
+      await getOwner();
+      const presaleStarted = await checkIfPresaleStarted(); 
+      if(presaleStarted ){
+        await checkIfPresaleEnded();
+      }
+  }
   // useEffects are used to react to changes in state of the website
   // The array at the end of function call represents what state changes will trigger this effect
   // In this case, whenever the value of `walletConnected` changes - this effect will be called
@@ -241,8 +249,7 @@ export default function Home() {
         providerOptions: {},
         disableInjectedProvider: false,
       });
-      connectWallet();
-      checkIfPresaleStarted(); 
+      onPageLoad();
     }
   }, [walletConnected]);
 
