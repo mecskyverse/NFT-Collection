@@ -34,7 +34,17 @@ export default function Home() {
       console.log(error);
     }
   }
-
+  const publicMint = async () => {
+    try {
+      const signer = getProviderOrSigner(true);
+      const nftContract = new Contract(CRYPTODEVS_CONTRACT_ADDRESS, abi, signer);
+      const txn = await nftContract.mint({value: utils.parseEther("0.01")})
+      await txn.wait();
+      window.alert("you've successfully minted a CryptoDev")
+    } catch (error) {
+      console.log(error);
+    }
+  }
   /**
    * Returns a Provider or Signer object representing the Ethereum RPC with or without the
    * signing capabilities of metamask attached
@@ -158,12 +168,23 @@ export default function Home() {
     if(!isPresaleEnded && presaleStarted ){
       return(
         <div>
-        <span className={styles.description}>Presale is started If you are in the whitelist 
+        <span className={styles.description} onClick={presaleMint}>Presale is started If you are in the whitelist 
         mint you NFT.</span>
         <button classNmae={styles.button}>Mint NFT!</button>
         </div>
+
       )
     }
+    if(presaleEnded){
+      return(
+        <div>
+        <span className={styles.description} onClick={publicMint}>Presale is already ended mint your NFT normally.</span>
+        <button classNmae={styles.button}>Mint NFT!</button>
+        </div>
+
+      )
+    }
+
 
 
   }
