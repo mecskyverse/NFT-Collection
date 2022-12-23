@@ -20,8 +20,21 @@ export default function Home() {
   const [presaleStarted, setPresaleStarted] = useState(false);
 //To check if presale is ended or not
   const [isPresaleEnded, setIsPresaleEnded] = useState(false);
+//TO keep track of how many NFTs has been minted currently
+  const [numTokensMinted, setNumTokensMinted] = useState("");
   // Create a reference to the Web3 Modal (used for connecting to Metamask) which persists as long as the page is open
   const web3ModalRef = useRef();
+
+  const getNumMintedTokens = async () =>{
+    try {
+      const provider = await getProviderOrSigner();
+      const nftContract = new Contract(CRYPTODEVS_CONTRACT_ADDRESS, abi, provider)
+      const numTokenIds = nftContract.tokenIds();
+      setNumTokensMinted(numTokenIds.toString()); 
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const presaleMint = async () =>{
     try {
@@ -179,7 +192,7 @@ export default function Home() {
       return(
         <div>
         <span className={styles.description} onClick={publicMint}>Presale is already ended mint your NFT normally.</span>
-        <button classNmae={styles.button}>Mint NFT!</button>
+        <button classNmae={styles.button}>Public Mint!</button>
         </div>
 
       )
