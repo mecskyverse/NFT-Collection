@@ -588,4 +588,4 @@ const abi = [
   }
 ]
 
-module.exports = { WHITELIST_CONTRACT_ADDRESS, METADATA_URL,abi };
+module.exports = { CRYPTODEVS_CONTRACT_ADDRESS, METADATA_URL,abi };
