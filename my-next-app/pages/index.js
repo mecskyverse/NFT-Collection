@@ -10,12 +10,6 @@ export default function Home() {
   const [isOwner, setIsOwner] = useState(false);
   // walletConnected keep track of whether the user's wallet is connected or not
   const [walletConnected, setWalletConnected] = useState(false);
-  // joinedWhitelist keeps track of whether the current metamask address has joined the Whitelist or not
-  const [joinedWhitelist, setJoinedWhitelist] = useState(false);
-  // loading is set to true when we are waiting for a transaction to get mined
-  const [loading, setLoading] = useState(false);
-  // numberOfWhitelisted tracks the number of addresses's whitelisted
-  const [numberOfWhitelisted, setNumberOfWhitelisted] = useState(0);
   //To Check Presale is started or not
   const [presaleStarted, setPresaleStarted] = useState(false);
 //To check if presale is ended or not
@@ -29,11 +23,12 @@ export default function Home() {
     try {
       const provider = await getProviderOrSigner();
       const nftContract = new Contract(CRYPTODEVS_CONTRACT_ADDRESS, abi, provider)
-      const numTokenIds = nftContract.tokenIds();
+      const numTokenIds = await nftContract.tokenIds();
       setNumTokensMinted(numTokenIds.toString()); 
     } catch (error) {
       console.error(error);
     }
+   
   }
 
   const presaleMint = async () =>{
@@ -181,9 +176,9 @@ export default function Home() {
     if(!isPresaleEnded && presaleStarted ){
       return(
         <div>
-        <span className={styles.description} onClick={presaleMint}>Presale is started If you are in the whitelist 
-        mint you NFT.</span>
-        <button classNmae={styles.button}>Mint NFT!</button>
+        <div className={styles.description} onClick={presaleMint}>Presale is started If you are in the whitelist 
+        mint you NFT.</div>
+        <button classNmae={styles.button}> Mint NFT</button>
         </div>
 
       )
@@ -208,6 +203,16 @@ export default function Home() {
       if(presaleStarted ){
         await checkIfPresaleEnded();
       }
+      await getNumMintedTokens();
+      setInterval(async () => {
+        await getNumMintedTokens();
+
+      },5 *1000)
+      setInterval(async () => {
+        const presaleStarted = await checkIfPresaleStarted();
+        if(presaleStarted)
+        await checkIfPresaleEnded();
+      },5 * 1000)
   }
   // useEffects are used to react to changes in state of the website
   // The array at the end of function call represents what state changes will trigger this effect
@@ -241,7 +246,7 @@ export default function Home() {
             Its an NFT collection for developers in Crypto.
           </div>
           <div className={styles.description}>
-            {numberOfWhitelisted} have already joined the Whitelist
+            {numTokensMinted}/20 NFTs has already been minted.
           </div>
           {renderBody()}
         </div>
