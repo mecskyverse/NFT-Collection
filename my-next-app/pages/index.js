@@ -176,7 +176,7 @@ export default function Home() {
     if(!presaleStarted){
       return(<div>
         <span className = {styles.description}>
-          Presale hasn't been started come back later.
+          Presale has not been started come back later.
         </span>
       </div>)
     }
