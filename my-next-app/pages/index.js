@@ -32,6 +32,7 @@ export default function Home() {
   }
 
   const presaleMint = async () =>{
+    console.log("in the presale mint")
     try {
       const signer = getProviderOrSigner(true);
       const nftContract = new Contract(CRYPTODEVS_CONTRACT_ADDRESS, abi, signer);
@@ -44,7 +45,8 @@ export default function Home() {
   }
   const publicMint = async () => {
     try {
-      const signer = getProviderOrSigner(true);
+      const signer = await getProviderOrSigner(true);
+      console.log(`in public mint ${signer}`)
       const nftContract = new Contract(CRYPTODEVS_CONTRACT_ADDRESS, abi, signer);
       const txn = await nftContract.mint({value: utils.parseEther("0.01")})
       await txn.wait();
@@ -101,15 +103,20 @@ export default function Home() {
       const nftContract = new Contract(CRYPTODEVS_CONTRACT_ADDRESS, abi, provider);
       const isPresaleStarted = await nftContract.presaleStarted();
       setPresaleStarted(isPresaleStarted);
+
+      return isPresaleStarted
     } catch (error) {
+      return false;  
       console.log(error)
     }
   }
   const checkIfPresaleEnded =async() => {
     try {
+      
       const provider = await getProviderOrSigner();
       const nftContract = new Contract(CRYPTODEVS_CONTRACT_ADDRESS, abi, provider);
-      const presaleEndTime = nftContract.presaleEnded; //time in seconds
+      const presaleEndTime = await nftContract.presaleEnded(); //time in seconds
+      
       const currentTime = Date.now() / 1000; //time in seconds after dividing it by 1000
 
       const hasPresaleEnded = presaleEndTime.lt(Math.floor(currentTime));
@@ -174,20 +181,22 @@ export default function Home() {
       </div>)
     }
     if(!isPresaleEnded && presaleStarted ){
+   
       return(
         <div>
-        <div className={styles.description} onClick={presaleMint}>Presale is started If you are in the whitelist 
+        <div className={styles.description} >Presale is started If you are in the whitelist 
         mint you NFT.</div>
-        <button classNmae={styles.button}> Mint NFT</button>
+        <button onClick={presaleMint} className={styles.button}> Mint NFT</button>
         </div>
 
       )
     }
-    if(presaleEnded){
+    
+    if(isPresaleEnded){
       return(
         <div>
-        <span className={styles.description} onClick={publicMint}>Presale is already ended mint your NFT normally.</span>
-        <button classNmae={styles.button}>Public Mint!</button>
+        <div className={styles.description} >Presale is already ended mint your NFT normally.</div>
+        <button onClick={publicMint} className={styles.button}>Public Mint!</button>
         </div>
 
       )
@@ -200,6 +209,7 @@ export default function Home() {
       await connectWallet();
       await getOwner();
       const presaleStarted = await checkIfPresaleStarted(); 
+      console.log("variable presale started = "+ presaleStarted)
       if(presaleStarted ){
         await checkIfPresaleEnded();
       }
@@ -210,6 +220,7 @@ export default function Home() {
       },5 *1000)
       setInterval(async () => {
         const presaleStarted = await checkIfPresaleStarted();
+        
         if(presaleStarted)
         await checkIfPresaleEnded();
       },5 * 1000)
