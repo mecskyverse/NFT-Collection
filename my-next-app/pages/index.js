@@ -34,7 +34,7 @@ export default function Home() {
   const presaleMint = async () =>{
     console.log("in the presale mint")
     try {
-      const signer = getProviderOrSigner(true);
+      const signer = await getProviderOrSigner(true);
       const nftContract = new Contract(CRYPTODEVS_CONTRACT_ADDRESS, abi, signer);
       const txn = await nftContract.presaleMint({value: utils.parseEther("0.01")})
       await txn.wait();
