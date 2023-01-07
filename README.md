@@ -7,7 +7,7 @@ NFT-collection is a FullStack Decentralized application which is based on ERC721
 - Non-Whitelisted addersses can also Mint but after the 5 minute presale timer is over.
 
 ## Getting Started
-You can visit the [Link Here](https://vercel.com/mecskyverse/nft-collection-l36k) to interact with the project.<br>
+You can visit the [Link Here](https://nft-collection-l36k.vercel.app/) to interact with the project.<br>
 
 you can also set it up on your local system.
 - Clone this repo with ``` git clone gihub.com/mecskyverse/NFT-Collection ```
